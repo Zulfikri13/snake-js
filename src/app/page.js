@@ -1,95 +1,57 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from 'react';
+import SnakeGame from "@/components/SnakeGame";
+import Link from 'next/link';
 
 export default function Home() {
+  // State untuk skor, status game over, dan reset
+  const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [reset, setReset] = useState(false);
+
+  // Fungsi untuk memperbarui skor
+  const handleScoreUpdate = (newScore) => {
+    setScore(newScore);
+  };
+
+  // Fungsi untuk menangani akhir permainan
+  const handleGameOver = () => {
+    setGameOver(true);
+  };
+
+  // Fungsi untuk mereset permainan
+  const resetGame = () => {
+    setScore(0);
+    setGameOver(false);
+    setReset(true);
+    setTimeout(() => setReset(false), 0);
+  };
+
+  // Fungsi untuk mengubah arah permainan berdasarkan tombol yang ditekan
+  const handleDirectionChange = (direction) => {
+    const event = new KeyboardEvent('keydown', { key: direction });
+    document.dispatchEvent(event);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="div-game" style={{ textAlign: 'center' }}>
+      <h1>Snake Game</h1>
+      <h2>Score: {score}</h2>
+      <SnakeGame onScoreUpdate={handleScoreUpdate} onGameOver={handleGameOver} reset={reset} />
+      {gameOver && <button onClick={resetGame}>Play Again</button>}
+      <div className="controls">
+        <button onClick={() => handleDirectionChange('ArrowUp')}>↑</button>
+        <button onClick={() => handleDirectionChange('ArrowLeft')}>←</button>
+        <button onClick={() => handleDirectionChange('ArrowDown')}>↓</button>
+        <button onClick={() => handleDirectionChange('ArrowRight')}>→</button>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className="project">
+        <p>This project is in </p>
+        <Link href="https://home.amikom.ac.id/">
+          <img width="96" height="96" src="https://jogjaversitas.id/wp-content/uploads/2020/08/Amikom.png" alt="github"/>
+        </Link>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
